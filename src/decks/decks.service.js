@@ -24,9 +24,16 @@ function update(updatedDeck) {
         .where({"d.id": updatedDeck.id})
 }
 
+function destroy(id) {
+    return knex("decks")
+        .where({id})
+        .del();
+}
+
 module.exports = {
     list,
     read,
     create,
     update,
+    destroy,
 }

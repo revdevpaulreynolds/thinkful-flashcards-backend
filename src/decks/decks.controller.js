@@ -36,7 +36,9 @@ async function update(req, res) {
 }
 
 async function destroy(req, res) {
-
+    const {deckId} = req.params;
+    await service.destroy(deckId);
+    res.sendStatus(204);
 }
 
 
@@ -45,7 +47,5 @@ module.exports = {
     read: [asyncErrorBoundary(deckExists), read],
     create: [asyncErrorBoundary(create)],
     update: [asyncErrorBoundary(deckExists), asyncErrorBoundary(update)],
-    delete: [asyncErrorBoundary(destroy)],
+    delete: [asyncErrorBoundary(deckExists), asyncErrorBoundary(destroy)],
 }
-
-//list, read, create, delete
