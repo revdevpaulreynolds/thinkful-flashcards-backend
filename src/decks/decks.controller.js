@@ -1,4 +1,5 @@
 const service = require("./decks.service");
+const cardsService = require("../cards/cards.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function deckExists(req, res, next) {
@@ -11,28 +12,46 @@ async function deckExists(req, res, next) {
     return next({ status: 404, message: "Deck not found"})
 }
 
+async function assembleDeck(deck) {
+    const cards = await cardsService.listCardsByDeckId(deck.id);
+    deck = {
+        ...deck,
+        cards,
+    };
+    return deck;
+}
+
 async function list(req, res) {
-    res.json({data: await service.list()})
+    const decks = await service.list();
+    let newDecks = [];
+    if (req.query._embed == 'cards') {
+        for(deck of decks) {
+            deck = await assembleDeck(deck);
+            newDecks.push(deck);
+        }
+    } else {
+        newDecks = decks;
+    }
+    res.json(newDecks)
 }
 
 async function read(req, res) {
-    res.json({data: res.locals.deck});
+    const deck = await assembleDeck(res.locals.deck);
+    res.json(deck);
 }
 
 async function create(req, res) {
-    const newDeck = await service.create(req.body.data);
-    res.status(201).json({
-        data: newDeck,
-    });
+    const newDeck = await service.create(req.body);
+    res.status(201).json(newDeck);
 }
 
 async function update(req, res) {
     const updatedDeck = {
-        ...req.body.data,
+        ...req.body,
         id: res.locals.deck.id,
     }
     const data = await service.update(updatedDeck);
-    res.json({ data })
+    res.json( data )
 }
 
 async function destroy(req, res) {

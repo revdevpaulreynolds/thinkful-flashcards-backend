@@ -15,13 +15,15 @@ function read(deckId) {
 function create(newDeck) {
     return knex("decks")
         .insert(newDeck)
-        .returning("*");
+        .returning("*")
+        .then(res => res[0]);
 }
 
 function update(updatedDeck) {
     return knex("decks as d")
         .update(updatedDeck, "*")
         .where({"d.id": updatedDeck.id})
+        .then(res => res[0])
 }
 
 function destroy(id) {

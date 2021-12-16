@@ -3,12 +3,12 @@ const methodNotAllowed = require("../errors/methodNotAllowed");
 const controller = require("./cards.controller");
 
 router.route("/")
-    .post(controller.post)
+    .post(controller.create)
     .all(methodNotAllowed)
 
 router.route("/:cardId")
     .get(controller.get)
-    .put(controller.create)
+    .put(controller.update)
     .delete(controller.delete)
     .all(methodNotAllowed)
 
