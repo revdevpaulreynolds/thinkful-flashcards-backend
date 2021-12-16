@@ -4,11 +4,12 @@ const controller = require("./decks.controller");
 
 router.route("/")
     .get(controller.list)
+    .post(controller.create)
     .all(methodNotAllowed)
 
 router.route("/:deckId")
     .get(controller.read)
-    .put(controller.create)
+    .put(controller.update)
     .delete(controller.delete)
     .all(methodNotAllowed)
 
