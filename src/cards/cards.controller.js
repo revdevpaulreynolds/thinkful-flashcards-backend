@@ -4,7 +4,6 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 async function cardExists(req, res, next) {
     const { cardId } = req.params;
     const card = await service.read(cardId);
-    console.log(card);
     if (card) {
         res.locals.card = card;
         return next();
